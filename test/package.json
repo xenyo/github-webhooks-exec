@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node webhooks.js"
+  },
+  "dependencies": {
+    "github-webhooks-exec": "link:..",
+    "pino": "^8.7.0"
+  }
+}
