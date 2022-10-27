@@ -16,8 +16,8 @@ const queue = fastq((command, cb) => {
     shell: true,
     timeout: 900 * 1000, // 15 minutes
   });
-  child.stdout.on('data', data => logger.info(data.toString()));
-  child.stderr.on('data', data => logger.warn(data.toString()));
+  child.stdout.on('data', data => logger.info(data.toString().trim()));
+  child.stderr.on('data', data => logger.warn(data.toString().trim()));
   child.on('close', code => {
     logger.info(`Child process exited with code ${code}`);
     cb(null);
