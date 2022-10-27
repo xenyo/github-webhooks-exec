@@ -5,7 +5,11 @@ import pino from 'pino';
 const logger = pino();
 
 webhooks.on('push', event => {
-  queue.push('pwd');
+  const commands = [
+    "git diff HEAD --exit-code",
+    "git pull",
+  ];
+  queue.push(commands.join(" && "));
 });
 
 server.listen(3000);
