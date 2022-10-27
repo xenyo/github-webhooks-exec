@@ -98,3 +98,24 @@ Navigate to Settings > Webhooks on your GitHub repository or organization and ad
 | Secret | The value of `GITHUB_WEBHOOKS_SECRET` in the `.env` file |
 | Which events would you like to trigger this webhook? | Just the `push` event |
 | Active | checked |
+
+## View logs
+
+Install `pino-pretty`:
+
+```bash
+# npm
+npm i -g pino-pretty
+
+# yarn
+yarn add -g pino-pretty
+
+# pnpm
+pnpm add -g pino-pretty
+```
+
+Tail logs:
+
+```bash
+pm2 logs --raw | pino-pretty
+```
