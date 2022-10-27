@@ -63,7 +63,7 @@ Generate a long random string for `GITHUB_WEBHOOKS_SECRET`.
 
 See `/examples` for a complete working example.
 
-## Starting the server automatically with pm2
+## Starting the server
 
 Ensure pm2 is installed and set up:
 
@@ -87,9 +87,9 @@ Save the pm2 app list to be restored at reboot:
 pm2 save
 ```
 
-### Add the webhook on GitHub
+## Add the webhook on GitHub
 
-Navigate to Settings > Webhooks on your GitHub repository and add a webhook with the following settings:
+Navigate to Settings > Webhooks on your GitHub repository or organization and add a webhook with the following settings:
 
 | Field | Value |
 | --- | --- |
