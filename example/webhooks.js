@@ -12,5 +12,5 @@ webhooks.on('push', event => {
   queue.push(commands.join(" && "));
 });
 
-server.listen(3000);
+server.listen(process.env.GITHUB_WEBHOOKS_PORT);
 logger.info('Ready');
