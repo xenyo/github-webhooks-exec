@@ -72,7 +72,7 @@ Ensure pm2 is installed and set up:
 pnpm add -g pm2
 
 # Install pm2 startup script
-pnpm startup
+pm2 startup
 ```
 
 Start the server using pm2:
