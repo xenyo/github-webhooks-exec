@@ -1,9 +1,9 @@
 var webhooks$1 = require('@octokit/webhooks');
 var dotenv = require('dotenv');
-var child_process = require('child_process');
 var fastq = require('fastq');
 var http = require('http');
 var pino = require('pino');
+var child_process = require('child_process');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -16,20 +16,20 @@ dotenv__default["default"].config();
 const logger = pino__default["default"]();
 const queue = fastq__default["default"]((command, cb) => {
   logger.info(command);
-  child_process.exec(command, {
+  const child = child_process.spawn(command, {
+    shell: true,
     timeout: 900 * 1000 // 15 minutes
-  }, (error, stdout, stderr) => {
-    if (error) {
-      logger.error(error);
-      return cb(error);
-    }
-    if (stdout) {
-      logger.info(stdout);
-    }
-    if (stderr) {
-      logger.warn(stderr);
-    }
+  });
+
+  child.stdout.on('data', data => logger.info(data.toString()));
+  child.stderr.on('data', data => logger.warn(data.toString()));
+  child.on('close', code => {
+    logger.info(`Child process exited with code ${code}`);
     cb(null);
+  });
+  child.on('error', error => {
+    logger.error('Failed to start subprocess.');
+    cb(error);
   });
 });
 const webhooks = new webhooks$1.Webhooks({

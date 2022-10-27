@@ -1,10 +1,10 @@
 import { Webhooks, createNodeMiddleware } from '@octokit/webhooks';
 
 import dotenv from 'dotenv';
-import { exec } from 'child_process';
 import fastq from 'fastq';
 import http from 'http';
 import pino from 'pino';
+import { spawn } from 'child_process';
 
 dotenv.config();
 
@@ -12,20 +12,19 @@ const logger = pino();
 
 const queue = fastq((command, cb) => {
   logger.info(command);
-  exec(command, {
+  const child = spawn(command, {
+    shell: true,
     timeout: 900 * 1000, // 15 minutes
-  }, (error, stdout, stderr) => {
-    if (error) {
-      logger.error(error);
-      return cb(error);
-    }
-    if (stdout) {
-      logger.info(stdout);
-    }
-    if (stderr) {
-      logger.warn(stderr);
-    }
+  });
+  child.stdout.on('data', data => logger.info(data.toString()));
+  child.stderr.on('data', data => logger.warn(data.toString()));
+  child.on('close', code => {
+    logger.info(`Child process exited with code ${code}`);
     cb(null);
+  });
+  child.on('error', error => {
+    logger.error('Failed to start subprocess.');
+    cb(error);
   });
 });
 
