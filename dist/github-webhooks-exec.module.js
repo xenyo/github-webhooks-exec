@@ -30,4 +30,4 @@ const webhooks = new Webhooks({
 });
 const server = http.createServer(createNodeMiddleware(webhooks));
 
-export { queue, server, webhooks };
+export { logger, queue, server, webhooks };

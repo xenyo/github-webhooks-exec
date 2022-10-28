@@ -32,4 +32,4 @@ const webhooks = new Webhooks({ secret: process.env.GITHUB_WEBHOOKS_SECRET });
 
 const server = http.createServer(createNodeMiddleware(webhooks));
 
-export { webhooks, queue, server };
+export { webhooks, queue, server, logger };

@@ -37,6 +37,7 @@ const webhooks = new webhooks$1.Webhooks({
 });
 const server = http__default["default"].createServer(webhooks$1.createNodeMiddleware(webhooks));
 
+exports.logger = logger;
 exports.queue = queue;
 exports.server = server;
 exports.webhooks = webhooks;
