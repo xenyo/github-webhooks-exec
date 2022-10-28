@@ -5,7 +5,6 @@
     "start": "node webhooks.js"
   },
   "dependencies": {
-    "github-webhooks-exec": "link:..",
-    "pino": "^8.7.0"
+    "github-webhooks-exec": "link:.."
   }
 }

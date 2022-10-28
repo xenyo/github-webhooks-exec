@@ -1,8 +1,4 @@
-import { queue, server, webhooks } from 'github-webhooks-exec';
-
-import pino from 'pino';
-
-const logger = pino();
+import { queue, server, webhooks, logger } from 'github-webhooks-exec';
 
 webhooks.on('push', event => {
   const commands = [
