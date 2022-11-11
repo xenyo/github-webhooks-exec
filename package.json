@@ -1,21 +1,6 @@
 {
   "name": "github-webhooks-exec",
-  "type": "module",
-  "source": "src/github-webhooks-exec.js",
-  "exports": {
-    "require": "./dist/github-webhooks-exec.cjs",
-    "default": "./dist/github-webhooks-exec.module.js"
-  },
-  "main": "./dist/github-webhooks-exec.cjs",
-  "module": "./dist/github-webhooks-exec.module.js",
-  "scripts": {
-    "build": "rimraf dist && microbundle build --target node -f esm,cjs --no-sourcemap",
-    "watch": "rimraf dist && microbundle watch --target node -f esm,cjs --no-sourcemap"
-  },
-  "devDependencies": {
-    "microbundle": "^0.15.1",
-    "rimraf": "^3.0.2"
-  },
+  "source": "github-webhooks-exec.js",
   "dependencies": {
     "@octokit/webhooks": "^10.3.1",
     "dotenv": "^16.0.3",

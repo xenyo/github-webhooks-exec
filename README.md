@@ -1,58 +1,43 @@
 # github-webhooks-exec
 
-Execute shell commands in response to GitHub webhook requests.
-
-## Features
+Execute shell commands on GitHub webhook events.
 
 - Works with pm2 to start automatically on boot
-- Queues commands to prevent multiple commands from executing simultaneously
+- Queues commands to ensure sequential execution
 
 ## Requirements
 
 - Node.js
 - pm2
-- An open port for listening to requests, for example 3000
 
 ## Installation
 
 ```bash
-# npm
 npm install github-webhooks-exec
-
-# yarn
-yarn add github-webhooks-exec
-
-# pnpm
-pnpm add github-webhooks-exec
 ```
 
-## Usage
+## Initial setup
 
-Create a file `webhooks.js` in the directory where you want to execute shell commands from:
+### webhooks.js
 
-```js
-// ESM
-import { queue, server, webhooks } from 'github-webhooks-exec';
-
-// CommonJS
-const { queue, server, webhooks } = require('github-webhooks-exec');
-```
-
-Add webhook handlers:
+Create `webhooks.js` in the directory where you want to execute shell commands from:
 
 ```js
+const { webhooks, queue, logger } = require('github-webhooks-exec');
+
 webhooks.on('push', event => {
-  queue.push('pwd');
+  logger.info('Received push event');
+  const commands = [
+    'set -e',
+    // etc.
+  ];
+  queue.push(commands.join('; '));
 });
 ```
 
-Listen for requests:
+### .env
 
-```js
-server.listen(process.env.GITHUB_WEBHOOKS_PORT);
-```
-
-Create a file `.env` in the same directory as `webhooks.js`:
+Create `.env` in the same directory:
 
 ```ini
 GITHUB_WEBHOOKS_PORT=3000
@@ -61,35 +46,45 @@ GITHUB_WEBHOOKS_SECRET=password
 
 Generate a long random string for `GITHUB_WEBHOOKS_SECRET`.
 
-See `/examples` for a complete working example.
+### ecosystem.config.js
 
-## Starting the server
+Create `ecosystem.config.js`:
+
+```js
+module.exports = {
+  apps: [
+    {
+      name: 'my-project-webhooks',
+      script: './webhooks.js',
+    },
+  ],
+};
+```
+
+## Running the server
 
 Ensure pm2 is installed and set up:
 
 ```bash
-# Install pm2 globally
-pnpm add -g pm2
-
-# Install pm2 startup script
+npm install -g pm2
 pm2 startup
 ```
 
-Start the server using pm2:
+Start the server:
 
 ```bash
-pm2 start webhooks.js --watch
+pm2 start ecosystem.config.js
 ```
 
-Save the pm2 app list to be restored at reboot:
+Save the pm2 app list to be restored on reboot:
 
 ```bash
 pm2 save
 ```
 
-## Add the webhook on GitHub
+## Adding the webhook on GitHub
 
-Navigate to Settings > Webhooks on your GitHub repository or organization and add a webhook with the following settings:
+In Settings > Webhooks of any GitHub repository or organization, add a webhook with the following settings:
 
 | Field | Value |
 | --- | --- |
@@ -99,19 +94,12 @@ Navigate to Settings > Webhooks on your GitHub repository or organization and ad
 | Which events would you like to trigger this webhook? | Just the `push` event |
 | Active | checked |
 
-## View logs
+## Viewing logs
 
 Install `pino-pretty`:
 
 ```bash
-# npm
 npm i -g pino-pretty
-
-# yarn
-yarn add -g pino-pretty
-
-# pnpm
-pnpm add -g pino-pretty
 ```
 
 Tail logs:
@@ -119,3 +107,25 @@ Tail logs:
 ```bash
 pm2 logs --raw | pino-pretty
 ```
+
+## API Reference
+
+`github-webhooks-exec` provides the following named exports:
+
+### webhooks
+
+A `Webhooks` instance initialized with `GITHUB_WEBHOOKS_SECRET` from `.env`.
+
+See https://github.com/octokit/webhooks.js/
+
+### queue
+
+A `fastq` instance that runs shell commands sequentially.
+
+https://github.com/mcollina/fastq
+
+### logger
+
+A `pino` logger instance.
+
+See https://github.com/pinojs/pino

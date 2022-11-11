@@ -1,8 +1,7 @@
 {
   "private": true,
-  "type": "module",
   "scripts": {
-    "start": "node webhooks.js"
+    "start": "pm2 start ecosystem.config.js"
   },
   "dependencies": {
     "github-webhooks-exec": "link:.."

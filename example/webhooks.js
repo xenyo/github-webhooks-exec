@@ -1,12 +1,10 @@
-import { queue, server, webhooks, logger } from 'github-webhooks-exec';
+const { webhooks, queue, logger } = require('github-webhooks-exec');
 
 webhooks.on('push', event => {
+  logger.info('Received push event');
   const commands = [
-    "git diff HEAD --exit-code",
-    "git pull",
+    'set -e',
+    'echo test',
   ];
-  queue.push(commands.join(" && "));
+  queue.push(commands.join('; '));
 });
-
-server.listen(process.env.GITHUB_WEBHOOKS_PORT);
-logger.info('Ready');

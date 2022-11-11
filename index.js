@@ -1,10 +1,9 @@
-import { Webhooks, createNodeMiddleware } from '@octokit/webhooks';
-
-import dotenv from 'dotenv';
-import fastq from 'fastq';
-import http from 'http';
-import pino from 'pino';
-import { spawn } from 'child_process';
+const { Webhooks, createNodeMiddleware } = require('@octokit/webhooks');
+const { spawn } = require('child_process');
+const dotenv = require('dotenv');
+const fastq = require('fastq');
+const http = require('http');
+const pino = require('pino');
 
 dotenv.config();
 
@@ -32,4 +31,9 @@ const webhooks = new Webhooks({ secret: process.env.GITHUB_WEBHOOKS_SECRET });
 
 const server = http.createServer(createNodeMiddleware(webhooks));
 
-export { webhooks, queue, server, logger };
+server.listen(process.env.GITHUB_WEBHOOKS_PORT, () => {
+  const { port } = server.address();
+  logger.info(`Listening on port ${port}`);
+});
+
+module.exports = { webhooks, queue, logger };
