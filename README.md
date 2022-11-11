@@ -122,7 +122,7 @@ See https://github.com/octokit/webhooks.js/
 
 A `fastq` instance that runs shell commands sequentially.
 
-https://github.com/mcollina/fastq
+See https://github.com/mcollina/fastq
 
 ### logger
 
