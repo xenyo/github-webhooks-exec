@@ -12,7 +12,7 @@ const logger = pino();
 const queue = fastq((command, cb) => {
   logger.info(command);
   const child = spawn(command, {
-    shell: true,
+    shell: '/bin/bash',
     timeout: 900 * 1000, // 15 minutes
   });
   child.stdout.on('data', data => logger.info(data.toString().trim()));
